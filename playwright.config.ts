@@ -3,7 +3,7 @@ declare const process: { env: { CI?: string | undefined } };
 import { defineConfig, devices, type PlaywrightTestConfig } from '@playwright/test';
 
 type CustomPlaywrightTestConfig = PlaywrightTestConfig & {
-  use?: PlaywrightTestConfig['use'] & { myCaseID?: string };
+  use?: PlaywrightTestConfig['use'] & { myLowIncomeCaseID?: number; myPrimaryCareTakerIDLowIncome?: number; myChildIDLowIncome?: number };
 };
 
 /**
