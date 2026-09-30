@@ -271,14 +271,30 @@ async function SetChildCareRequest(page: Page){
   await page.getByRole('button', { name: 'Complete' }).click();
 }
 
-// NEEDS WORK
 async function DetermineEligibilityLowIncome(page: Page){
   await page.getByText('Determine Eligibility', { exact: true }).click();
+
+  const confirmEligibilityBtn = page.locator("//button[contains(text(),'Confirm Eligibility')]");
+  const programDropDown = page.locator("//label[contains(@class, 'slds-form-element__label') and span[text() = 'Program']]/following-sibling::div//div//select[contains(@class, 'slds-select') and contains(@name, 'select')]");
+
+  await programDropDown.press('Enter');
   await page.getByLabel('*Program').selectOption('LI');
-  await page.getByRole('button', { name: 'Assess Eligibility' }).click();
-  //await page.locator('.loading.cLoadingSpinnerComp.cAbstractComponent').first().click();
-  //await page.locator('.windowViewMode-normal > .loading.cLoadingSpinnerComp.cAbstractComponent').click();
-  await page.getByRole('button', { name: 'Confirm Eligibility' }).click();
+
+  let done = false;
+  while (!done) {
+    
+    if (await confirmEligibilityBtn.isVisible()) {
+      // Select Confirm Eligibility button
+      await page.getByRole('button', { name: 'Confirm Eligibility' }).press('Enter');
+      done = true;
+      console.log("Confirming Eligibility...");
+    } else {
+      // Re-click Access Eligibility button while waiting/synchronizing
+      await page.getByRole('button', { name: 'Assess Eligibility' }).press('Enter');
+      await page.waitForTimeout(10000);
+      console.log("Loop while Accessing Eligibility...");
+    }
+  }
 }
 
 // NEEDS WORK
@@ -394,9 +410,9 @@ test('End to End Test for Low Income Case', async ({ page }) => {
   await AddChildAndPrimaryCareTakerRelationshipLowIncome(page);
   await LoadLowIncomeCase(page);
   await SetChildCareRequest(page);
-
   await DetermineEligibilityLowIncome(page);
   await LoadLowIncomeCase(page);
+
   await CreateAuthorizationLowIncome(page);
 
   await LoadLowIncomeCase(page);
