@@ -177,7 +177,7 @@ async function AddPrimaryCareTakerPrimaryActivity(page: Page){
   await page.getByRole('textbox', { name: 'Effective Begin Date' }).click();
   await page.getByRole('button', { name: 'Today' }).click();
   await page.getByRole('combobox', { name: 'Case ID' }).click();
-  await page.waitForTimeout(5000);
+  await page.waitForTimeout(3000);
   await page.getByRole('combobox', { name: 'Case ID' }).press('Enter');
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   // JOB SEARCH
@@ -274,7 +274,7 @@ async function SetChildCareRequest(page: Page){
 async function DetermineEligibilityLowIncome(page: Page){
   await page.getByText('Determine Eligibility', { exact: true }).click();
 
-  const confirmEligibilityBtn = page.locator("//button[contains(text(),'Confirm Eligibility')]");
+  const confirmEligibilityBtn = page.getByRole('button', { name: 'Confirm Eligibility', exact: true });
   const programDropDown = page.locator("//label[contains(@class, 'slds-form-element__label') and span[text() = 'Program']]/following-sibling::div//div//select[contains(@class, 'slds-select') and contains(@name, 'select')]");
 
   await programDropDown.press('Enter');
@@ -283,75 +283,138 @@ async function DetermineEligibilityLowIncome(page: Page){
   let done = false;
   while (!done) {
     
-    if (await confirmEligibilityBtn.isVisible()) {
+    if (await confirmEligibilityBtn.isVisible() && await confirmEligibilityBtn.isEnabled()) {
       // Select Confirm Eligibility button
-      await page.getByRole('button', { name: 'Confirm Eligibility' }).press('Enter');
+      await page.waitForTimeout(5000);
+      //await page.getByRole('button', { name: 'Confirm Eligibility', exact: true }).click();
+      //await page.getByRole('button', { name: 'Confirm Eligibility'}).click();
+      await confirmEligibilityBtn.click();
+      //await page.getByRole('button', { name: 'Confirm Eligibility'}).press('Enter');
+      //await confirmEligibilityBtn.press('Enter');
+      await page.waitForTimeout(30000);
+      //await page.getByRole('button', { name: 'Confirm Eligibility', exact: true }).press('Enter');
+      //await page.getByRole('button', { name: 'Confirm Eligibility'}).press('Enter');
       done = true;
       console.log("Confirming Eligibility...");
     } else {
       // Re-click Access Eligibility button while waiting/synchronizing
-      await page.getByRole('button', { name: 'Assess Eligibility' }).press('Enter');
+      await page.getByRole('button', { name: 'Assess Eligibility'}).press('Enter');
+      //await page.getByRole('button', { name: 'Assess Eligibility', exact: true }).click();
       await page.waitForTimeout(10000);
       console.log("Loop while Accessing Eligibility...");
     }
   }
 }
 
-// NEEDS WORK
 async function CreateAuthorizationLowIncome(page: Page){
+  const ProviderID = "1528536";
+
   await page.getByText('Create Authorization', { exact: true }).click();
+  await page.waitForTimeout(5000);
 
-  await page.locator('.slds-form-element > .slds-form-element__control > .slds-select_container > .slds-select').nth(3).click();
-  await page.locator('.slds-form-element > .slds-form-element__control > .slds-select_container > .slds-select').nth(3).selectOption('CHILDFIRSTNAMELOWINCOME CHILDLASTNAMELOWINCOME / I570960');
-
-  //await page.locator('#select-938').selectOption('a1rhG00000XbGPNQA3');
-  //await page.getByRole('combobox', { name: '*Child Name/State ID' }).fill(`${myChildIDLowIncome}`);
-  //await page.getByRole('combobox', { name: '*Child Name/State ID' }).click();
-  //await page.waitForTimeout(3000);
-  //await page.getByRole('combobox', { name: '*Child Name/State ID' }).press('ArrowDown');
-  //await page.getByRole('combobox', { name: '*Child Name/State ID' }).press('Enter');
-
-  //await page.getByLabel('*Child Name/State ID').selectOption('C');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
 
   await page.getByRole('textbox', { name: 'Authorization Begin Date' }).click();
   await page.getByRole('button', { name: 'Today' }).click();
+
   await page.getByRole('searchbox', { name: 'Provider ID' }).click();
-  await page.getByRole('searchbox', { name: 'Provider ID' }).fill('1528536');
-  //await page.getByRole('searchbox', { name: 'Provider ID' }).press('ArrowDown');
-  //await page.getByRole('searchbox', { name: 'Provider ID' }).press('ArrowDown');
-  //await page.getByRole('searchbox', { name: 'Provider ID' }).press('ArrowDown');
+  await page.getByRole('searchbox', { name: 'Provider ID' }).fill(ProviderID);
   await page.getByRole('searchbox', { name: 'Provider ID' }).press('ArrowDown');
   await page.getByText('1528536', { exact: true }).click();
-  await page.locator('#input-999').click();
-  await page.locator('#input-999').fill('8');
-  await page.locator('#input-999').press('Tab');
-  await page.locator('#input-1001').fill('8');
-  await page.locator('#input-1001').press('Tab');
-  await page.locator('#input-1003').fill('8');
-  await page.locator('#input-1003').press('Tab');
-  await page.locator('#input-1005').fill('8');
-  await page.locator('#input-1005').press('Tab');
-  await page.locator('#input-1007').fill('8');
-  await page.locator('#input-1007').press('Tab');
-  await page.locator('#input-1009').fill('8');
-  await page.locator('#input-1009').press('Tab');
-  await page.locator('#input-1011').fill('8');
-  await page.locator('#input-1011').press('Tab');
-  await page.locator('#select-1012').selectOption('1');
-  await page.locator('#select-1012').press('Tab');
-  await page.locator('#select-1013').selectOption('1');
-  await page.locator('#select-1013').press('Tab');
-  await page.locator('#select-1014').selectOption('1');
-  await page.locator('#select-1014').press('Tab');
-  await page.locator('#select-1015').selectOption('1');
-  await page.locator('#select-1015').press('Tab');
-  await page.locator('#select-1016').selectOption('1');
-  await page.locator('#select-1016').press('Tab');
-  await page.locator('#select-1017').selectOption('1');
-  await page.locator('#select-1017').press('Tab');
-  await page.locator('#select-1018').selectOption('1');
-  await page.locator('#select-1018').press('Tab');
-  await page.getByRole('button', { name: 'Next' }).click();
+
+  //const linkPathForFoundProviderID = `//span[contains(@class, 'slds-listbox__option-text slds-listbox__option-text_entity') and contains(@title, '${ProviderID}')]`;
+  //const foundProviderID = page.locator(linkPathForFoundProviderID);
+  //await foundProviderID.click();
+
+  await page.locator('lightning-input[data-day="1"]').click();
+  await page.locator('lightning-input[data-day="1"]').locator('input').fill('8');
+  await page.locator('lightning-input[data-day="1"]').press('Tab');
+  await page.locator('lightning-input[data-day="2"]').click();
+  await page.locator('lightning-input[data-day="2"]').locator('input').fill('7');
+  await page.locator('lightning-input[data-day="2"]').press('Tab');
+  await page.locator('lightning-input[data-day="3"]').click();
+  await page.locator('lightning-input[data-day="3"]').locator('input').fill('6');
+  await page.locator('lightning-input[data-day="3"]').press('Tab');
+  await page.locator('lightning-input[data-day="4"]').click();
+  await page.locator('lightning-input[data-day="4"]').locator('input').fill('5');
+  await page.locator('lightning-input[data-day="4"]').press('Tab');
+  await page.locator('lightning-input[data-day="5"]').click();
+  await page.locator('lightning-input[data-day="5"]').locator('input').fill('4');
+  await page.locator('lightning-input[data-day="5"]').press('Tab');
+  await page.locator('lightning-input[data-day="6"]').click();
+  await page.locator('lightning-input[data-day="6"]').locator('input').fill('3');
+  await page.locator('lightning-input[data-day="6"]').press('Tab');
+  await page.locator('lightning-input[data-day="0"]').click();
+  await page.locator('lightning-input[data-day="0"]').locator('input').fill('2');
+  await page.locator('lightning-input[data-day="0"]').press('Tab');
+  
+  await page.waitForTimeout(2000);
+
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('Regular');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Tab');
+
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('Regular');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Tab');
+
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('Regular');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Tab');
+
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('Regular');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Tab');
+
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('Regular');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Tab');
+
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('Regular');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Tab');
+
+  await page.keyboard.press('Enter');
+  await page.keyboard.type('Regular');
+  await page.keyboard.press('Enter');
+
+  // Loop while creating Authorization Encumbrance records on the Create New Authorization page
+  // Locators for Next and View buttons
+  const nextButton = page.locator("//button[contains(@class, 'slds-button_brand') and normalize-space(text())='Next']");
+  const viewButton = page.locator("//button[contains(@class, 'slds-button_brand') and normalize-space(text())='View']");
+
+  // Select Next button on Create New Authorization Page
+  //await page.getByRole('button', { name: 'Next' }).click();
+  await nextButton.click();
+
+  let done = false;
+  while (!done) {
+    await page.waitForTimeout(30000);
+
+    if (await viewButton.isVisible()) {
+      // Select View button on Create New Authorization Page
+      await viewButton.click();
+      done = true;
+      console.log("Select View button on Create New Authorization Page...");
+    } else {
+      // Select Next button on Create New Authorization Page again because it takes awhile to create Authorization Encumbrance records
+      await nextButton.click();
+      console.log("Loop while creating Authorization Encumbrance records...");
+    }
+  }
+
+  await page.getByRole('button', { name: 'Finish' }).click();
 }
 
 async function LoadPrimaryCareTakerLowIncome(page: Page){
@@ -399,6 +462,7 @@ async function LogOut(page: Page){
   await page.getByRole('link', { name: 'Log Out' }).click();
 };
 
+// End to End Test block for Low Income Case
 test('End to End Test for Low Income Case', async ({ page }) => {
   await LogIn(page);
   await CreateLowIncomeCase(page);
@@ -412,9 +476,7 @@ test('End to End Test for Low Income Case', async ({ page }) => {
   await SetChildCareRequest(page);
   await DetermineEligibilityLowIncome(page);
   await LoadLowIncomeCase(page);
-
   await CreateAuthorizationLowIncome(page);
-
   await LoadLowIncomeCase(page);
   await LoadPrimaryCareTakerLowIncome(page);
   await DeletePrimaryCareTaker(page);

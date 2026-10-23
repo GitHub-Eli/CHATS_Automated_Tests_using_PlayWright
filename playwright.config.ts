@@ -59,7 +59,7 @@ use: {
 
   launchOptions: {
     args: ["--start-maximized"],
-    //slowMo: 1000,
+    //slowMo: 2000,
   },
 
   // Sets default timeout for all locator actions (click, fill, etc.)
